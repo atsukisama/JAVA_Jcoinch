@@ -17,6 +17,22 @@ task hello (type: Jar) {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
+task server (type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'ServerJCoinche.ServerJCoinche'
+    }
+    baseName = 'Server' + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+task client (type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'ClientJCoinche.ClientJCoinche'
+    }
+    baseName = 'Client' + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
 // end::jar[]
 
 // tag::dependencies[]
