@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * Created by rusig_n on 20/11/2016.
  */
+
 public class RoomManager {
     List<Client> ClientList = new ArrayList<Client>();
     List<Room> RoomList = new ArrayList<Room>();
@@ -37,9 +38,10 @@ public class RoomManager {
 
     public void SendMsgToRoom(ChannelHandlerContext chx, String msg) {
         for (Iterator<Room> i = RoomList.iterator(); i.hasNext(); ) {
-            for (Iterator<Client> j = i.next().GetClientList().iterator(); j.hasNext(); ) {
+            Room room = i.next();
+            for (Iterator<Client> j = room.GetClientList().iterator(); j.hasNext(); ) {
                 if (j.next().GetChx() == chx) {
-                    i.next().GetMsg(msg);
+                    room.GetMsg(msg, chx);
                     return;
                 }
             }

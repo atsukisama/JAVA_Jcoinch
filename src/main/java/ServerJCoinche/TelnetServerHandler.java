@@ -4,6 +4,7 @@ package ServerJCoinche;
  * Created by rusig_n on 20/11/2016.
  */
 
+import Commun.TransfertClass;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler.Sharable;
@@ -12,6 +13,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 
 import java.net.InetAddress;
 import java.util.Date;
+import java.util.Objects;
 
 @Sharable
 public class TelnetServerHandler extends SimpleChannelInboundHandler<String> {
@@ -38,27 +40,7 @@ public class TelnetServerHandler extends SimpleChannelInboundHandler<String> {
 
         _roomManager.SendMsgToRoom(ctx, request);
         return;
-/*
-        String response;
-        boolean close = false;
-        if (request.isEmpty()) {
-            response = "Please type something.\r\n";
-        } else if ("bye".equals(request.toLowerCase())) {
-            response = "Have a good day!\r\n";
-            close = true;
-        } else {
-            response = "Did you say '" + request + "'?\r\n";
-        }
 
-        // We do not need to write a ChannelBuffer here.
-        // We know the encoder inserted at TelnetPipelineFactory will do the conversion.
-        ChannelFuture future = ctx.write(response);
-
-        // Close the connection after sending 'Have a good day!'
-        // if the client has sent 'bye'.
-        if (close) {
-            future.addListener(ChannelFutureListener.CLOSE);
-        }*/
     }
 
     @Override

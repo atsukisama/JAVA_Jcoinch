@@ -4,6 +4,7 @@ package ClientJCoinche;
  * Created by rusig_n on 20/11/2016.
  */
 
+import Commun.TransfertClass;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -12,7 +13,8 @@ import io.netty.channel.SimpleChannelInboundHandler;
 public class TelnetClientHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+    public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+
         System.err.println(msg);
     }
 
