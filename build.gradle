@@ -9,14 +9,6 @@ repositories {
 // end::repositories[]
 
 // tag::jar[]
-task hello (type: Jar) {
-    manifest {
-        attributes 'Main-Class': 'hello.HelloWorld'
-    }
-    baseName = 'Hello_world' + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
-}
 task server (type: Jar) {
     manifest {
         attributes 'Main-Class': 'ServerJCoinche.ServerJCoinche'
