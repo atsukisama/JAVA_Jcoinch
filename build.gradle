@@ -9,30 +9,34 @@ repositories {
 // end::repositories[]
 
 // tag::jar[]
-task hello (type: Jar) {
-    manifest {
-        attributes 'Main-Class': 'hello.HelloWorld'
-    }
-    baseName = 'Hello_world' + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
+task 'cleantarget' {
+    delete 'target'
 }
-task server (type: Jar) {
+
+clean.dependsOn('cleantarget')
+
+task 'package' (dependsOn: ['server', 'client'])
+
+task 'server' (type: Jar) {
+    //destinationDir = file("$rootDir/target")
     manifest {
         attributes 'Main-Class': 'ServerJCoinche.ServerJCoinche'
     }
-    baseName = 'Server' + '-all'
+    baseName = 'jcoinche-server.jar'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
-task client (type: Jar) {
+
+task 'client' (type: Jar) {
+    //destinationDir = file("$rootDir/target")
     manifest {
         attributes 'Main-Class': 'ClientJCoinche.ClientJCoinche'
     }
-    baseName = 'Client' + '-all'
+    baseName = 'jcoinche-client.jar'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
+
 // end::jar[]
 
 // tag::dependencies[]
