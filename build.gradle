@@ -18,7 +18,7 @@ clean.dependsOn('cleantarget')
 task 'package' (dependsOn: ['server', 'client'])
 
 task 'server' (type: Jar) {
-    destinationDir = file("$rootDir/target")
+    //destinationDir = file("$rootDir/target")
     manifest {
         attributes 'Main-Class': 'ServerJCoinche.ServerJCoinche'
     }
@@ -28,7 +28,7 @@ task 'server' (type: Jar) {
 }
 
 task 'client' (type: Jar) {
-    destinationDir = file("$rootDir/target")
+    //destinationDir = file("$rootDir/target")
     manifest {
         attributes 'Main-Class': 'ClientJCoinche.ClientJCoinche'
     }
