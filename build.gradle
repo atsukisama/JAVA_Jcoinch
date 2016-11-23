@@ -9,7 +9,15 @@ repositories {
 // end::repositories[]
 
 // tag::jar[]
-task server (type: Jar) {
+task 'cleantarget' {
+    delete 'target'
+}
+
+clean.dependsOn('cleantarget')
+
+task 'package' (dependsOn: ['server', 'client'])
+
+task 'server' (type: Jar) {
     destinationDir = file("$rootDir/target")
     manifest {
         attributes 'Main-Class': 'ServerJCoinche.ServerJCoinche'
@@ -18,7 +26,8 @@ task server (type: Jar) {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
-task client (type: Jar) {
+
+task 'client' (type: Jar) {
     destinationDir = file("$rootDir/target")
     manifest {
         attributes 'Main-Class': 'ClientJCoinche.ClientJCoinche'
@@ -27,6 +36,7 @@ task client (type: Jar) {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
+
 // end::jar[]
 
 // tag::dependencies[]
