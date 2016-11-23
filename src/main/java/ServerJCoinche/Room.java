@@ -65,13 +65,19 @@ public class Room {
         return res;
     }
 
+    public void SendMsgToAll(String msg) {
+        for (Client val : ClientList) {
+            val.writeClient(msg);
+        }
+    }
     private void InitRoom() {
         for (Client val : ClientList) {
-            val.writeClient("Welcome to room " + id + " You are the player" + ClientList.indexOf(val) + "you are in team " + (ClientList.indexOf(val) % 2 == 0 ? "1" : "2"));
+            val.writeClient("Welcome to room " + id + " You are the player " + ClientList.indexOf(val) + " you are in team " + (ClientList.indexOf(val) % 2 == 0 ? "1" : "2"));
         }
         RandomDistrib();
         SendHandCard();
-
+        betRound = new BetRound(this);
+        isOnBet = true;
 
     }
 
@@ -150,6 +156,10 @@ public class Room {
 
     private void RunOneRound() {
 
+    }
+
+    public void SetBet(Boolean val) {
+        isOnBet = val;
     }
 
 }

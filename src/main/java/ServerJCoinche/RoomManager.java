@@ -37,6 +37,7 @@ public class RoomManager {
     }
 
     public void SendMsgToRoom(ChannelHandlerContext chx, String msg) {
+        System.out.print(msg);
         for (Iterator<Room> i = RoomList.iterator(); i.hasNext(); ) {
             Room room = i.next();
             for (Iterator<Client> j = room.GetClientList().iterator(); j.hasNext(); ) {
