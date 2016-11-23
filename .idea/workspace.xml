@@ -22,7 +22,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="BetRound.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="BetRound.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/ServerJCoinche/BetRound.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="421">
@@ -61,7 +61,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Room.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Room.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/ServerJCoinche/Room.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1564">
@@ -720,12 +720,12 @@
       <option name="presentableId" value="Default" />
       <updated>1479805771995</updated>
       <workItem from="1479805781800" duration="9965000" />
-      <workItem from="1479891356665" duration="6739000" />
+      <workItem from="1479891356665" duration="7047000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16704000" />
+    <option name="totallyTimeSpent" value="17012000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1918" height="1047" extended-state="0" />
@@ -856,19 +856,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ServerJCoinche/BetRound.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="421">
-          <caret line="100" column="29" selection-start-line="100" selection-start-column="29" selection-end-line="100" selection-end-column="29" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#BetRound#0;class#BetRound#0" expanded="false" />
-            <element signature="method#GeMsg#0;class#BetRound#0" expanded="false" />
-            <element signature="method#VerifMsg#0;class#BetRound#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/ServerJCoinche/RoomManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
@@ -891,6 +878,19 @@
             <element signature="e#2453#2461#0" expanded="true" />
             <element signature="e#4119#4120#0" expanded="true" />
             <element signature="e#4148#4149#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ServerJCoinche/BetRound.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="421">
+          <caret line="100" column="29" selection-start-line="100" selection-start-column="29" selection-end-line="100" selection-end-column="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#BetRound#0;class#BetRound#0" expanded="false" />
+            <element signature="method#GeMsg#0;class#BetRound#0" expanded="false" />
+            <element signature="method#VerifMsg#0;class#BetRound#0" expanded="false" />
           </folding>
         </state>
       </provider>
