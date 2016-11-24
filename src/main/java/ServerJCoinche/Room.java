@@ -17,16 +17,19 @@ public class Room {
     int id;
     int turn;
     int team1score = 0;
-    int Team2score = 0;
+    int team2score = 0;
     int bet = 0;
     String atout;
     Boolean isOnBet = false;
     Boolean isOnPlay = false;
     BetRound betRound;
+    Game game;
 
 
     List<Client> ClientList = new ArrayList<Client>();
-    List<String> CardOnBoard = new ArrayList<String>();
+    List<Card> CardOnBoard = new ArrayList<Card>();
+    List<Card> Team1Card = new ArrayList<Card>();
+    List<Card> Team2Card = new ArrayList<Card>();
 
     public Room(int id) {
         this.id = id;
@@ -45,8 +48,8 @@ public class Room {
         if (isOnBet) {
             betRound.GeMsg(str, GetIdChx(chx));
 
-        } else {
-
+        } else if (isOnPlay) {
+            game.GeMsg(str, GetIdChx(chx));
         }
 
     }
@@ -70,27 +73,31 @@ public class Room {
             val.writeClient(msg);
         }
     }
+
     private void InitRoom() {
         for (Client val : ClientList) {
             val.writeClient("Welcome to room " + id + " You are the player " + ClientList.indexOf(val) + " you are in team " + (ClientList.indexOf(val) % 2 == 0 ? "1" : "2"));
+        }
+        ReRound();
+    }
+    public void ReRound() {
+        for (Client val : ClientList) {
+            val.SetPass(false);
         }
         RandomDistrib();
         SendHandCard();
         betRound = new BetRound(this);
         isOnBet = true;
-
+        isOnPlay = false;
+        game = new Game(this);
     }
 
-    private void RunBetTime() {
-
-    }
-
-    private void SendHandCard() {
+    public void SendHandCard() {
         for (Iterator<Client> i = ClientList.iterator(); i.hasNext(); ) {
             String toSend = "Your hand is => ";
             Client cl = i.next();
-            for (Iterator<String> j = cl.GetCardOnHand().iterator(); j.hasNext(); ) {
-                toSend += j.next();
+            for (Iterator<Card> j = cl.GetCardOnHand().iterator(); j.hasNext(); ) {
+                toSend += j.next().GetCard();
                 toSend += " ";
             }
             cl.writeClient(toSend);
@@ -98,39 +105,39 @@ public class Room {
     }
 
     private void RandomDistrib() {
-        List<String> CardPack = new ArrayList<String>();
-        CardPack.add("7S");
-        CardPack.add("8S");
-        CardPack.add("9S");
-        CardPack.add("10S");
-        CardPack.add("VS");
-        CardPack.add("DS");
-        CardPack.add("RS");
-        CardPack.add("AS");
-        CardPack.add("7D");
-        CardPack.add("8D");
-        CardPack.add("9D");
-        CardPack.add("10D");
-        CardPack.add("VD");
-        CardPack.add("DD");
-        CardPack.add("RD");
-        CardPack.add("AD");
-        CardPack.add("7H");
-        CardPack.add("8H");
-        CardPack.add("9H");
-        CardPack.add("10H");
-        CardPack.add("VH");
-        CardPack.add("DH");
-        CardPack.add("RH");
-        CardPack.add("AH");
-        CardPack.add("7C");
-        CardPack.add("8C");
-        CardPack.add("9C");
-        CardPack.add("10C");
-        CardPack.add("VC");
-        CardPack.add("DC");
-        CardPack.add("RC");
-        CardPack.add("AC");
+        List<Card> CardPack = new ArrayList<Card>();
+        CardPack.add(new Card("7S", 0, 0));
+        CardPack.add(new Card("8S", 0, 0));
+        CardPack.add(new Card("9S", 0, 14));
+        CardPack.add(new Card("10S", 10, 10));
+        CardPack.add(new Card("VS", 2, 20));
+        CardPack.add(new Card("DS", 3, 3));
+        CardPack.add(new Card("RS", 4, 4));
+        CardPack.add(new Card("AS", 11, 11));
+        CardPack.add(new Card("7D", 0, 0));
+        CardPack.add(new Card("8D", 0, 0));
+        CardPack.add(new Card("9D", 0, 14));
+        CardPack.add(new Card("10D", 10, 10));
+        CardPack.add(new Card("VD", 2, 20));
+        CardPack.add(new Card("DD", 3, 3));
+        CardPack.add(new Card("RD", 4, 4));
+        CardPack.add(new Card("AD", 11, 11));
+        CardPack.add(new Card("7H", 0, 0));
+        CardPack.add(new Card("8H", 0, 0));
+        CardPack.add(new Card("9H", 0, 14));
+        CardPack.add(new Card("10H", 10, 10));
+        CardPack.add(new Card("VH", 2, 20));
+        CardPack.add(new Card("DH", 3, 3));
+        CardPack.add(new Card("RH", 4, 4));
+        CardPack.add(new Card("AH", 11, 11));
+        CardPack.add(new Card("7C", 0, 0));
+        CardPack.add(new Card("8C", 0, 0));
+        CardPack.add(new Card("9C", 0, 14));
+        CardPack.add(new Card("10C", 10, 10));
+        CardPack.add(new Card("VC", 2, 20));
+        CardPack.add(new Card("DC", 3, 3));
+        CardPack.add(new Card("RC", 4, 4));
+        CardPack.add(new Card("AC", 11, 11));
 
         for (Iterator<Client> i = ClientList.iterator(); i.hasNext(); ) {
             int max = 32;
@@ -154,12 +161,43 @@ public class Room {
         }
     }
 
-    private void RunOneRound() {
-
-    }
-
-    public void SetBet(Boolean val) {
+    public void SetBetRound(Boolean val) {
         isOnBet = val;
     }
 
+    public void SetAtout(String atout) {
+        this.atout = atout;
+    }
+
+    public String GetAtout() {
+        return atout;
+    }
+
+    public void SeBet(int bet) {
+        this.bet = bet;
+    }
+
+    public void SeIsOnPlay(Boolean val) {
+        this.isOnPlay = val;
+    }
+
+    public int GetTeam1Score() {
+        return team1score;
+    }
+
+    public int GetTeam2Score() {
+        return team2score;
+    }
+
+    public void SetTeam1Score(int score) {
+        team1score = score;
+    }
+
+    public void SetTeam2Score(int score) {
+        team2score = score;
+    }
+
+    public int GetBet() {
+        return bet;
+    }
 }

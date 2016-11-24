@@ -16,7 +16,7 @@ public class Client {
     Boolean pass = false;
     int bet = 0;
     ChannelHandlerContext chx;
-    List<String> CardtOnHand = new ArrayList<String>();
+    List<Card> CardtOnHand = new ArrayList<Card>();
 
     public Client(ChannelHandlerContext chx)
     {
@@ -33,7 +33,7 @@ public class Client {
         chx.flush();
     }
 
-    public void addCard(String card)
+    public void addCard(Card card)
     {
         CardtOnHand.add(card);
     }
@@ -43,12 +43,16 @@ public class Client {
         CardtOnHand.clear();
     }
 
-    public List<String> GetCardOnHand() {
+    public List<Card> GetCardOnHand() {
         return CardtOnHand;
     }
 
     public Boolean GetPass() {
         return pass;
+    }
+
+    public void SetPass(Boolean val) {
+        pass = val;
     }
 
     public void ChangePass() {
@@ -69,5 +73,39 @@ public class Client {
 
     public void SetId(int id) {
         this.id = id;
+    }
+
+    public Boolean GotTrump(String trump) {
+        for (Card val : CardtOnHand) {
+            if (val.GetCard().contains(trump))
+                return true;
+        }
+        return false;
+    }
+
+    public Boolean GotCard(String card) {
+        for (Card val : CardtOnHand) {
+            if (val.GetCard().contains(card))
+                return true;
+        }
+        return false;
+    }
+
+    public Card SendCard(String card) {
+        for (Card val : CardtOnHand) {
+            if (val.GetCard().contains(card)) {
+                return val;
+            }
+        }
+        return null;
+    }
+
+    public void ErasCard(String card) {
+        for (Card val : CardtOnHand) {
+            if (val.GetCard().contains(card)) {
+                CardtOnHand.remove(val);
+                return;
+            }
+        }
     }
 }

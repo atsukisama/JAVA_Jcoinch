@@ -26,7 +26,7 @@ public class BetRound {
                 cl.writeClient("Bad cmd retry");
                 return;
             } else {
-                room.SendMsgToAll("Current bet => " + bet + "trump => " + atout);
+                room.SendMsgToAll("Current bet => " + bet + " trump => " + atout);
                 ChangeRound();
             }
 
@@ -38,7 +38,7 @@ public class BetRound {
 
     private Boolean VerifMsg(String msg, Client cl) {
         String[] strtab = msg.split(" ");
-        if (strtab[0].contains("pass")) {
+        if (strtab[0].contains("pass") && first != 0) {
             cl.pass = true;
             return true;
         }
@@ -67,8 +67,6 @@ public class BetRound {
                     bet = newBet;
                     atout = strtab[1];
                 }
-
-
             } else
                 return false;
         } else
@@ -82,22 +80,34 @@ public class BetRound {
         first = 0;
         max = 160;
     }
+
     private void ChangeRound() {
         int i = turn;
-
+        int nbPass = 0;
         i++;
         i = i % 4;
-        for (int j = 0; j < 3; j++) {
-            if (!room.GetClientList().get(i).GetPass()) {
-                turn = i;
-                room.SendMsgToAll("Its turn of player => " + turn);
-                return;
+        for (Client val : room.GetClientList()) {
+            if (val.GetPass())
+                nbPass++;
+        }
+        if (nbPass < 3) {
+            for (int j = 0; j < 3; j++) {
+                if (!room.GetClientList().get(i).GetPass()) {
+                    turn = i;
+                    room.SendMsgToAll("Its turn of player => " + turn);
+                    return;
+                }
+                i++;
+                i = i % 4;
             }
-            i++;
-            i = i % 4;
         }
         room.SendMsgToAll("Final bet => " + bet + " trump => " + atout);
-        room.SetBet(false);
-        ClearBetRoundClass();
+        room.SendMsgToAll("Now its time for the Game");
+        room.SendMsgToAll("Its turn of player => 0");
+        room.SetBetRound(false);
+        room.SetAtout(atout);
+        room.SeBet(bet);
+        room.SeIsOnPlay(true);
+//        ClearBetRoundClass();
     }
 }

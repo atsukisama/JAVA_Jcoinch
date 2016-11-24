@@ -32,7 +32,7 @@ public class ServerJCoinche {
         } else {
             PORT = 8080;
         }
-
+        CardDetail.InitCardDetail();
         if (SSL) {
             SelfSignedCertificate ssc = null;
             try {

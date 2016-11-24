@@ -22,6 +22,7 @@ public class TelnetServerHandler extends SimpleChannelInboundHandler<String> {
 
     public  TelnetServerHandler()
     {
+
         _roomManager = new RoomManager();
         System.out.println("TELNET SEVER CONS");
     }
