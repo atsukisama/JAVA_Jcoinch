@@ -21,7 +21,7 @@ public class RoomManager {
     public void AddCLient(ChannelHandlerContext chx) {
         Client client = new Client(chx);
         ClientList.add(client);
-        client.writeClient("Wait for playing...");
+        //client.writeClient("Wait for playing...");
         if (ClientList.size() >= 4) {
             Room room = new Room(RoomList.size());
             int k = 0;

@@ -25,25 +25,29 @@ public class Game {
                 ChangeTurn();
             }
         } else {
-            cl.writeClient("It's not your turn");
+            //cl.writeClient("It's not your turn");
+            cl.writeClient("/ERROR 1");
         }
     }
 
     private Boolean VerifMsg(String msg, Client cl) {
         if (CardDetail.isACard(msg.replace("\r\n", ""))) {
             if (!cl.GotCard(msg)) {
-                cl.writeClient("You dont have this card !!!");
+                //cl.writeClient("You dont have this card !!!");
+                cl.writeClient("/ERROR 3");
                 return false;
             }
             if (!msg.contains(room.GetAtout()) && cl.GotTrump(room.GetAtout())) {
-                cl.writeClient("Play a card with a suite equal to the trump !!!");
+                //cl.writeClient("Play a card with a suite equal to the trump !!!");
+                //cl.writeClient("/ERROR 4")
                 return false;
             }
             CardOnTable.put(cl.SendCard(msg), (turn % 2 == 0 ? 1 : 2));
             cl.ErasCard(msg);
             return true;
         }
-        cl.writeClient("Its not a card!!!");
+        //cl.writeClient("Its not a card!!!");
+        cl.writeClient("/ERROR 5");
         return false;
     }
 
@@ -76,7 +80,8 @@ public class Game {
             else
                 Team2Score += score;
             room.SendHandCard();
-            room.SendMsgToAll("Its turn of player => " + turn);
+            //room.SendMsgToAll("Its turn of player => " + turn);
+            room.SendMsgToAll("/TURN " + turn);
             CardOnTable.clear();
             if (room.GetClientList().get(turn).GetCardOnHand().size() == 0) {
                 if ((Team1Score > Team2Score && Team1Score > room.bet) || (Team1Score < Team2Score && Team2Score < room.bet)) {
@@ -95,13 +100,15 @@ public class Game {
                     room.ReRound();
             }
         } else {
-            String str = "Card on table => ";
+            //String str = "Card on table => ";
+            String str = "/TABLE ";
             for (Map.Entry<Card, Integer> entree : CardOnTable.entrySet()) {
                 str += entree.getKey().GetCard();
                 str += " ";
             }
             room.SendMsgToAll(str);
-            room.SendMsgToAll("Its turn of player => " + turn);
+            //room.SendMsgToAll("Its turn of player => " + turn);
+            room.SendMsgToAll("/TURN " + turn);
         }
     }
 }
