@@ -23,7 +23,7 @@ public class BetRound {
     public void GeMsg(String msg, Client cl) {
         if (turn == cl.GetId()) {
             if (!VerifMsg(msg, cl)) {
-                cl.writeClient("Bad cmd retry");
+//                cl.writeClient("Bad cmd retry");
                 return;
             } else {
                 room.SendMsgToAll("Current bet => " + bet + " trump => " + atout);
@@ -43,18 +43,20 @@ public class BetRound {
             return true;
         }
         if (strtab.length != 2) {
-
+            cl.writeClient("Bad command");
             return false;
         }
         int newBet;
         try {
             newBet = Integer.parseInt(strtab[0]);
         } catch (NumberFormatException e) {
+            cl.writeClient("Bad command");
             return false;
         }
         if (strtab[1].contains("H") || strtab[1].contains("D") || strtab[1].contains("C") || strtab[1].contains("S")) {
             if (bet < newBet) {
                 if (newBet - bet != 10 && first > 0) {
+                    cl.writeClient("Bad bet");
                     return false;
                 }
                 if (first == 0) {
@@ -67,10 +69,14 @@ public class BetRound {
                     bet = newBet;
                     atout = strtab[1];
                 }
-            } else
+            } else {
+                cl.writeClient("Bad bet");
                 return false;
-        } else
+            }
+        } else {
+            cl.writeClient("Bad command");
             return false;
+        }
         return true;
     }
 

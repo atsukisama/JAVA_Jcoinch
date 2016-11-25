@@ -79,7 +79,7 @@ public class Game {
             room.SendMsgToAll("Its turn of player => " + turn);
             CardOnTable.clear();
             if (room.GetClientList().get(turn).GetCardOnHand().size() == 0) {
-                if (Team1Score > Team2Score) {
+                if ((Team1Score > Team2Score && Team1Score > room.bet) || (Team1Score < Team2Score && Team2Score < room.bet)) {
                     room.SetTeam1Score(room.GetTeam1Score() + Team1Score + room.GetBet());
                     room.SendMsgToAll("Team1 win this round !!");
                 }

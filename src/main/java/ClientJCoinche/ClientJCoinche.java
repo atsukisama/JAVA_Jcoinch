@@ -65,7 +65,7 @@ public class ClientJCoinche {
 
                 // If user typed the 'bye' command, wait until the server closes
                 // the connection.
-                if ("bye".equals(line.toLowerCase())) {
+                if ("quit".equals(line.toLowerCase())) {
                     ch.closeFuture().sync();
                     break;
                 }
