@@ -9,6 +9,8 @@ public class Game {
 
     int turn = 0;
     Room room;
+    String firstCard = "";
+    int ctp = 0;
     Map<Card, Integer> CardOnTable = new HashMap<Card, Integer>();
     int Team1Score = 0;
     int Team2Score = 0;
@@ -29,6 +31,17 @@ public class Game {
             cl.writeClient("/ERROR 1");
         }
     }
+    
+    private String GetSuite(String msg) {
+        if (msg.contains("S"))
+            return "S";
+        else if (msg.contains("C"))
+            return "C";
+        if (msg.contains("H"))
+            return "H";
+        else
+            return "D";
+    }
 
     private Boolean VerifMsg(String msg, Client cl) {
         if (CardDetail.isACard(msg.replace("\r\n", ""))) {
@@ -37,12 +50,17 @@ public class Game {
                 cl.writeClient("/ERROR 3");
                 return false;
             }
-            if (!msg.contains(room.GetAtout()) && cl.GotTrump(room.GetAtout())) {
-                //cl.writeClient("Play a card with a suite equal to the trump !!!");
-                cl.writeClient("/ERROR 4");
-                return false;
+            if (CardOnTable.size() != 0) {
+                if ((GetSuite(msg) != GetSuite(firstCard) && !GetSuite(msg).contains(room.GetAtout()))) {
+                    if ((cl.GotTrump(GetSuite(firstCard)) || cl.GotTrump(room.GetAtout()))) {
+                        cl.writeClient("/ERROR 4");
+                        return false;
+                    }
+                }
             }
-            CardOnTable.put(cl.SendCard(msg), (turn % 2 == 0 ? 1 : 2));
+            else
+                firstCard = msg;
+            CardOnTable.put(cl.SendCard(msg), turn);
             cl.ErasCard(msg);
             return true;
         }
@@ -53,8 +71,10 @@ public class Game {
 
     private void ChangeTurn() {
         turn++;
+        ctp++;
         turn %= 4;
-        if (turn == 0) {
+        if (ctp == 4) {
+            firstCard = "";
             int score = 0;
             int max = 0;
             int team = 0;
@@ -75,7 +95,8 @@ public class Game {
                     }
                 }
             }
-            if (team == 1)
+            turn = team;
+            if ((team % 2 == 0 ? 1 : 2) == 1)
                 Team1Score += score;
             else
                 Team2Score += score;
@@ -108,6 +129,7 @@ public class Game {
             }
             room.SendMsgToAll(str);
             //room.SendMsgToAll("Its turn of player => " + turn);
+            room.SendHandCard();
             room.SendMsgToAll("/TURN " + turn);
         }
     }
