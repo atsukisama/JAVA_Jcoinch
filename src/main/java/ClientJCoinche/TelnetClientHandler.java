@@ -12,10 +12,10 @@ import io.netty.channel.SimpleChannelInboundHandler;
 @Sharable
 public class TelnetClientHandler extends SimpleChannelInboundHandler<String> {
 
+    ClientGui clientGui = new ClientGui();
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
-
-        System.err.println(msg);
+        clientGui.ParseMsg(msg);
     }
 
     @Override

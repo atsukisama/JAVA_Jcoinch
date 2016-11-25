@@ -39,7 +39,7 @@ public class Game {
             }
             if (!msg.contains(room.GetAtout()) && cl.GotTrump(room.GetAtout())) {
                 //cl.writeClient("Play a card with a suite equal to the trump !!!");
-                //cl.writeClient("/ERROR 4")
+                cl.writeClient("/ERROR 4");
                 return false;
             }
             CardOnTable.put(cl.SendCard(msg), (turn % 2 == 0 ? 1 : 2));

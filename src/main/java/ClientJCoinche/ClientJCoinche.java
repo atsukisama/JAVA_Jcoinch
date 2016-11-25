@@ -26,6 +26,9 @@ public class ClientJCoinche {
     public static void main(String[] args) throws Exception {
         // Configure SSL.
 
+        int player_id = -1;
+        int room_id = -1;
+
         if (args.length == 2) {
             HOST = args[0];
             PORT = Integer.parseInt(args[1]);
