@@ -174,7 +174,6 @@ public class ClientGui {
     private void display(String cmd[]) {
         System.out.print("\u001b[2J\u001b[H");
         System.out.flush();
-        System.out.println(Arrays.toString(cardTable));
         System.out.println("+" + Strings.repeat("-", 56) + "+");
         String table[] = displayTable();
         Integer z = 0;
@@ -277,6 +276,8 @@ public class ClientGui {
             case "/TABLE"   :   setTable(cmd);
                                 break;
             case "/TURN"    :   display(cmd);
+                                break;
+            case "/QUIT"    :   ClientJCoinche.closeClient();
                                 break;
             case "/RESTART" :   gameStart = false;
                                 for (Integer i = 0; i < 4; i++) {

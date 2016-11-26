@@ -69,7 +69,6 @@ public class Game {
         turn++;
         ctp++;
         turn %= 4;
-        System.out.print("\n\nCTP = " + ctp + "\n\n");
         if (ctp == 4) {
             ctp = 0;
             firstCard = "";
@@ -120,7 +119,7 @@ public class Game {
                 room.SendMsgToAll("/RESTART");
                 room.SeIsOnPlay(false);
                 if (room.GetTeam1Score() > 100 || room.GetTeam2Score() > 100)
-                    room.SendMsgToAll("fini");
+                    room.SendMsgToAll("/QUIT");
                 else
                     room.ReRound();
             }
