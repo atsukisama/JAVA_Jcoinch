@@ -26,7 +26,50 @@ public class ClientGui {
     public ClientGui() {
 
     }
+    private String[] createCardGui(String card) {
+        String cardGui[] = new String[5];
+        String type = null;
+        String suit = null;
+        if (card.toCharArray()[0] == '1') {
+            type = "10";
+            suit = card.substring(2, 3);
+        } else {
+            type = card.substring(0, 1);
+            suit = card.substring(1, 2);
+        }
+        switch (suit) {
+            case "D"    :   suit = "♦";
+                            break;
+            case "S"    :   suit = "♠";
+                            break;
+            case "H"    :   suit = "♥";
+                            break;
+            case "C"    :   suit = "♣";
+                            break;
+        }
+        cardGui[0] = "┌─────┐";
+        cardGui[1] = "│" + type + String.format("%"+ (5 - type.length()) +"s", " ") + "│";
+        cardGui[2] = "│  " + suit + "  │";
+        cardGui[3] = "│" + String.format("%"+ (5 - type.length()) +"s", " ") + type + "│";
+        cardGui[4] = "└─────┘";
 
+        return cardGui;
+    }
+    private String[] createCardTrail(String cardHand[]) {
+        String cardtrail[] = new String[5];
+        for (Integer y = 0; y < cardtrail.length; y++) {
+            cardtrail[y] = "";
+        }
+        Integer i = 0;
+        while (cardHand[i] != null) {
+            String card[] = createCardGui(cardHand[i]);
+            for (Integer z = 0; z < card.length; z++) {
+                cardtrail[z] += card[z];
+            }
+            i++;
+        }
+        return cardtrail;
+    }
     private void displayTop() {
         //String disp = "";
         String line = String.format("%14s", " ");
@@ -35,42 +78,44 @@ public class ClientGui {
         dispGui += line + "└──┘\n";
         //System.out.print(dispGui);
     }
+    private void displayBetRound() {
+        String bet = playerAction[(clientId + 2) % 4];
+        dispGui += "     " + "│" + String.format("%8s", " ");
+        if (bet == null) {
+            dispGui += String.format("%5s", " ");
+        } else {
+            dispGui += bet;
+        }
+        dispGui += String.format("%8s", " ") + "│\n";
+        dispGui += "┌──┐ │" + String.format("%21s", " ") + "│ ┌──┐\n";
+        Integer left = (clientId + 1) % 4;
+        Integer right =(clientId + 3) % 4;
+        dispGui += "│P" + Integer.toString(left) + "│ │";
+        bet = playerAction[left];
+        if (bet == null) {
+            dispGui += String.format("%5s", " ");
+        } else {
+            dispGui += bet;
+        }
+        dispGui += String.format("%11s", " ");
+        bet = playerAction[right];
+        if (bet == null) {
+            dispGui += String.format("%5s", " "); 
+        } else if (bet.toCharArray()[bet.length() - 1] == ' ') {
+            dispGui += " " + bet.substring(0, bet.length() - 1);
+        } else {
+            dispGui += bet;
+        }
+        dispGui += "│ │P" + Integer.toString(right) + "│\n";
+        dispGui += "└──┘ │" + String.format("%21s", " ") + "│ └──┘\n";
+        dispGui += "     │" + String.format("%21s", " ") + "│\n";
+    }
     private void displayMiddle() {
         dispGui += "     ┌─────────────────────┐\n";
         if (!gameStart) {
-            String bet = playerAction[(clientId + 2) % 4];
-            dispGui += "     " + "│" + String.format("%8s", " ");
-            if (bet == null) {
-                dispGui += String.format("%5s", " ");
-            }
-            else {
-                dispGui += bet;
-            }
-            dispGui += String.format("%8s", " ") + "│\n";
-            dispGui += "┌──┐ │" + String.format("%21s", " ") + "│ ┌──┐\n";
-            Integer left = (clientId + 1) % 4;
-            Integer right =(clientId + 3) % 4;
-            dispGui += "│P" + Integer.toString(left) + "│ │";
-            bet = playerAction[left];
-            if (bet == null) {
-               dispGui += String.format("%5s", " ");
-            } else {
-                dispGui += bet;
-            }
-            dispGui += String.format("%11s", " ");
-            bet = playerAction[right];
-            if (bet == null) {
-               dispGui += String.format("%5s", " "); 
-            } else if (bet.toCharArray()[bet.length() - 1] == ' ') {
-                dispGui += " " + bet.substring(0, bet.length() - 1);
-            } else {
-                dispGui += bet;
-            }
-            dispGui += "│ │P" + Integer.toString(right) + "│\n";
-            dispGui += "└──┘ │" + String.format("%21s", " ") + "│ └──┘\n";
-            dispGui += "     │" + String.format("%21s", " ") + "│\n";
-            dispGui += "     └─────────────────────┘\n";
+            displayBetRound();
         }
+        dispGui += "     └─────────────────────┘\n";
     }
     private void display(String cmd[]) {
         dispGui = "";
@@ -81,6 +126,13 @@ public class ClientGui {
         displayMiddle();
         System.out.print(dispGui);
         valueTurn = Integer.parseInt(cmd[1]);
+
+        System.out.println(Arrays.toString(cardHand));
+        String hand[] = createCardTrail(cardHand);
+        for (Integer i = 0; i < hand.length; i++) {
+            System.out.println(hand[i]);
+        }
+
         if (valueTurn == clientId) {
            if (gameStart == false) {
                System.out.print("Place your bet => ");
@@ -111,6 +163,12 @@ public class ClientGui {
         }
     }
 
+    private void setHand(String cmd[]) {
+        for (Integer i = 1; i < cmd.length; i++) {
+            cardHand[i - 1] = cmd[i];
+        }
+    }
+
     public void ParseMsg( String str) {
         //System.out.print("server sent => " + str + "\n");
         String cmd[] = str.split(" ");
@@ -123,8 +181,9 @@ public class ClientGui {
                                 break;
             case "/BET"     :   setBet(cmd);
                                 break;
+            case "/HAND"    :   setHand(cmd);
+                                break;
             case "/TURN"    :   display(cmd);
-                                //System.out.print("TURN => " + cmd[1] + "\n");
                                 break;
             default         :   System.out.print(str + "\n");
                                 break;
