@@ -70,10 +70,12 @@ public class BetRound {
                         bet = newBet;
                         atout = strtab[1];
                         first++;
+                        return true;
                     }
                 } else if (newBet >= 80 && newBet % 10 == 0) {
                     bet = newBet;
                     atout = strtab[1];
+                    return true;
                 }
             } else {
                 //cl.writeClient("Bad bet");
@@ -85,7 +87,8 @@ public class BetRound {
             cl.writeClient("/ERROR 0");
             return false;
         }
-        return true;
+        cl.writeClient("/ERROR 2");
+        return false;
     }
 
     private void ClearBetRoundClass() {
@@ -120,6 +123,7 @@ public class BetRound {
         room.SendMsgToAll("/BET FINAL " + bet + " " + atout);
         //room.SendMsgToAll("Now its time for the Game");
         //room.SendMsgToAll("Its turn of player => 0");
+        room.SendHandCard();
         room.SendMsgToAll("/TURN 0");
         room.SetBetRound(false);
         room.SetAtout(atout);
