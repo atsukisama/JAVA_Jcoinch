@@ -18,21 +18,21 @@ clean.dependsOn('cleantarget')
 task 'package' (dependsOn: ['server', 'client'])
 
 task 'server' (type: Jar) {
-    //destinationDir = file("$rootDir/target")
+    destinationDir = file("$rootDir/target")
     manifest {
         attributes 'Main-Class': 'ServerJCoinche.ServerJCoinche'
     }
-    baseName = 'jcoinche-server.jar'
+    baseName = 'jcoinche-server'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
 
 task 'client' (type: Jar) {
-    //destinationDir = file("$rootDir/target")
+    destinationDir = file("$rootDir/target")
     manifest {
         attributes 'Main-Class': 'ClientJCoinche.ClientJCoinche'
     }
-    baseName = 'jcoinche-client.jar'
+    baseName = 'jcoinche-client'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }

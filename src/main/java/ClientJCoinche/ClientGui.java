@@ -13,7 +13,7 @@ public class ClientGui {
     String          roomId  = "";
     Integer         clientId = -1;
     String          teamId = "";
-    String          valueTurn = "0";
+    Integer         valueTurn = 0;
     String          valueBet[] = new String[2];
     String          playerAction[] = new String[4];
     String          cardHand[] = new String[9];
@@ -53,16 +53,16 @@ public class ClientGui {
             dispGui += "│P" + Integer.toString(left) + "│ │";
             bet = playerAction[left];
             if (bet == null) {
-               dispGui += String.format("%5s", " "); 
-            } else if (bet.toCharArray()[0] == ' ') {
-                dispGui += bet.substring(1) + " ";
+               dispGui += String.format("%5s", " ");
             } else {
                 dispGui += bet;
             }
             dispGui += String.format("%11s", " ");
             bet = playerAction[right];
             if (bet == null) {
-               dispGui += String.format("%5s", " ");
+               dispGui += String.format("%5s", " "); 
+            } else if (bet.toCharArray()[bet.length() - 1] == ' ') {
+                dispGui += " " + bet.substring(0, bet.length() - 1);
             } else {
                 dispGui += bet;
             }
@@ -70,10 +70,9 @@ public class ClientGui {
             dispGui += "└──┘ │" + String.format("%21s", " ") + "│ └──┘\n";
             dispGui += "     │" + String.format("%21s", " ") + "│\n";
             dispGui += "     └─────────────────────┘\n";
-
         }
     }
-    private void display() {
+    private void display(String cmd[]) {
         dispGui = "";
         System.out.print("\u001b[2J\u001b[H");
         System.out.flush();
@@ -81,6 +80,16 @@ public class ClientGui {
         displayTop();
         displayMiddle();
         System.out.print(dispGui);
+        valueTurn = Integer.parseInt(cmd[1]);
+        if (valueTurn == clientId) {
+           if (gameStart == false) {
+               System.out.print("Place your bet => ");
+           } else {
+               System.out.print("Place your card => ");
+           }
+        } else {
+            System.out.print("Waiting for player " + Integer.toString(valueTurn) + "...");
+        }
     }
 
     private void setBet(String cmd[]) {
@@ -92,13 +101,13 @@ public class ClientGui {
         (!(valueBet[0].equals(cmd[2])) || !(valueBet[1].equals(cmd[3])))) {
             valueBet[0] = cmd[2];
             valueBet[1] = cmd[3];
-            playerAction[Integer.parseInt(valueTurn)] = cmd[2] + " " + cmd[3];
-            if (playerAction[Integer.parseInt(valueTurn)].length() < 5) {
-                playerAction[Integer.parseInt(valueTurn)] += " ";
+            playerAction[valueTurn] = cmd[2] + " " + cmd[3];
+            if (playerAction[valueTurn].length() < 5) {
+                playerAction[valueTurn] += " ";
             }
         }
         else {
-            playerAction[Integer.parseInt(valueTurn)] = "pass ";
+            playerAction[valueTurn] = "pass ";
         }
     }
 
@@ -114,8 +123,7 @@ public class ClientGui {
                                 break;
             case "/BET"     :   setBet(cmd);
                                 break;
-            case "/TURN"    :   display();
-                                valueTurn = cmd[1];
+            case "/TURN"    :   display(cmd);
                                 //System.out.print("TURN => " + cmd[1] + "\n");
                                 break;
             default         :   System.out.print(str + "\n");
