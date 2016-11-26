@@ -24,7 +24,14 @@ public class ClientJCoinche {
     public static int PORT;
     public static String HOST;
 
-    
+    public static  EventLoopGroup group;
+    public static  Channel ch;
+
+    public static void closeClient() {
+        group.shutdownGracefully();
+        System.exit(0);
+    }
+
     public static void main(String[] args) throws Exception {
         // Configure SSL.
 
@@ -46,7 +53,7 @@ public class ClientJCoinche {
             sslCtx = null;
         }
 
-        EventLoopGroup group = new NioEventLoopGroup();
+        group = new NioEventLoopGroup();
         try {
             Bootstrap b = new Bootstrap();
             b.group(group)
@@ -54,7 +61,7 @@ public class ClientJCoinche {
                     .handler(new TelnetClientInitializer(sslCtx));
 
             // Start the connection attempt.
-            Channel ch = b.connect(HOST, PORT).sync().channel();
+            ch = b.connect(HOST, PORT).sync().channel();
 
             // Read commands from the stdin.
             ChannelFuture lastWriteFuture = null;
@@ -64,7 +71,6 @@ public class ClientJCoinche {
                 if (line == null) {
                     break;
                 }
-
                 // Sends the received line to the server.
                 lastWriteFuture = ch.writeAndFlush(line + "\r\n");
 
