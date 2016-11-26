@@ -33,14 +33,20 @@ public class Game {
     }
     
     private String GetSuite(String msg) {
-        if (msg.contains("S"))
-            return "S";
-        else if (msg.contains("C"))
-            return "C";
-        if (msg.contains("H"))
-            return "H";
-        else
-            return "D";
+        // if (msg.contains("S"))
+        //     return "S";
+        // else if (msg.contains("C"))
+        //     return "C";
+        // if (msg.contains("H"))
+        //     return "H";
+        // else
+        //     return "D";
+        if (msg.toCharArray()[0] == '1') {
+            System.out.print("\n\nSUITE RETURN =>" + msg.substring(2, 3) + "\n");
+            return msg.substring(2, 3);
+        }
+        System.out.print("\n\nSUITE RETURN =>" + msg.substring(1, 2) + "\n");
+        return msg.substring(1, 2);
     }
 
     private Boolean VerifMsg(String msg, Client cl) {
@@ -51,7 +57,7 @@ public class Game {
                 return false;
             }
             if (CardOnTable.size() != 0) {
-                if ((GetSuite(msg) != GetSuite(firstCard) && !GetSuite(msg).contains(room.GetAtout()))) {
+                if ((!GetSuite(msg).equals(GetSuite(firstCard)) && !GetSuite(msg).contains(room.GetAtout()))) {
                     if ((cl.GotTrump(GetSuite(firstCard)) || cl.GotTrump(room.GetAtout()))) {
                         cl.writeClient("/ERROR 4");
                         return false;
@@ -73,7 +79,9 @@ public class Game {
         turn++;
         ctp++;
         turn %= 4;
+        System.out.print("\n\nCTP = " + ctp + "\n\n");
         if (ctp == 4) {
+            ctp = 0;
             firstCard = "";
             int score = 0;
             int max = 0;
@@ -108,7 +116,16 @@ public class Game {
             }
             room.SendMsgToAll(str);
             room.SendMsgToAll("/TURN " + turn);
+            System.out.print("\n\n BEFORE CLEAR\n\n");
             CardOnTable.clear();
+            System.out.print("\n\n BEFORE CLEAR\n\n");
+            Integer i = 0;
+            for (Map.Entry<Card, Integer> entree : CardOnTable.entrySet()) {
+                i++;
+            }
+            if (i > 0) {
+                System.out.print("\n\nNOT CLEARED\n\n");
+            }
             if (room.GetClientList().get(turn).GetCardOnHand().size() == 0) {
                 if ((Team1Score > Team2Score && Team1Score > room.bet) || (Team1Score < Team2Score && Team2Score < room.bet)) {
                     room.SetTeam1Score(room.GetTeam1Score() + Team1Score + room.GetBet());
@@ -119,8 +136,9 @@ public class Game {
                     room.SendMsgToAll("Team2 win this round !!");
                 }
                 room.SendMsgToAll("Team1 => " + room.GetTeam1Score() + " Team2 => " + room.GetTeam2Score());
+                room.SendMsgToAll("/RESTART");
                 room.SeIsOnPlay(false);
-                if (room.GetTeam1Score() > 1000 || room.GetTeam2Score() > 1000)
+                if (room.GetTeam1Score() > 100 || room.GetTeam2Score() > 100)
                     room.SendMsgToAll("fini");
                 else
                     room.ReRound();

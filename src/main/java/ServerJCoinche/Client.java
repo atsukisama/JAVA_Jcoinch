@@ -42,6 +42,12 @@ public class Client {
     {
         CardtOnHand.clear();
     }
+    private String GetSuite(String msg) {
+        if (msg.toCharArray()[0] == '1') {
+            return msg.substring(2, 3);
+        }
+        return msg.substring(1, 2);
+    }
 
     public List<Card> GetCardOnHand() {
         return CardtOnHand;
@@ -77,7 +83,7 @@ public class Client {
 
     public Boolean GotTrump(String trump) {
         for (Card val : CardtOnHand) {
-            if (val.GetCard().contains(trump))
+            if (GetSuite(val.GetCard()).equals(trump))
                 return true;
         }
         return false;
@@ -85,6 +91,7 @@ public class Client {
 
     public Boolean GotCard(String card) {
         for (Card val : CardtOnHand) {
+
             if (val.GetCard().contains(card))
                 return true;
         }
