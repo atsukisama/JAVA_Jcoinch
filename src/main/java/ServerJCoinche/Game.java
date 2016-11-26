@@ -33,19 +33,9 @@ public class Game {
     }
     
     private String GetSuite(String msg) {
-        // if (msg.contains("S"))
-        //     return "S";
-        // else if (msg.contains("C"))
-        //     return "C";
-        // if (msg.contains("H"))
-        //     return "H";
-        // else
-        //     return "D";
         if (msg.toCharArray()[0] == '1') {
-            System.out.print("\n\nSUITE RETURN =>" + msg.substring(2, 3) + "\n");
             return msg.substring(2, 3);
         }
-        System.out.print("\n\nSUITE RETURN =>" + msg.substring(1, 2) + "\n");
         return msg.substring(1, 2);
     }
 
@@ -116,16 +106,7 @@ public class Game {
             }
             room.SendMsgToAll(str);
             room.SendMsgToAll("/TURN " + turn);
-            System.out.print("\n\n BEFORE CLEAR\n\n");
             CardOnTable.clear();
-            System.out.print("\n\n BEFORE CLEAR\n\n");
-            Integer i = 0;
-            for (Map.Entry<Card, Integer> entree : CardOnTable.entrySet()) {
-                i++;
-            }
-            if (i > 0) {
-                System.out.print("\n\nNOT CLEARED\n\n");
-            }
             if (room.GetClientList().get(turn).GetCardOnHand().size() == 0) {
                 if ((Team1Score > Team2Score && Team1Score > room.bet) || (Team1Score < Team2Score && Team2Score < room.bet)) {
                     room.SetTeam1Score(room.GetTeam1Score() + Team1Score + room.GetBet());

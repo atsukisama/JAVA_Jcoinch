@@ -76,7 +76,6 @@ public class Room {
 
     private void InitRoom() {
         for (Client val : ClientList) {
-            //val.writeClient("Welcome to room " + id + " You are the player " + ClientList.indexOf(val) + " you are in team " + (ClientList.indexOf(val) % 2 == 0 ? "1" : "2"));
             val.writeClient("/ROOM " + id);
             val.writeClient("/PLAYER " + ClientList.indexOf(val));
             val.writeClient("/TEAM " + (ClientList.indexOf(val) % 2 == 0 ? "1" : "2"));
@@ -97,7 +96,6 @@ public class Room {
 
     public void SendHandCard() {
         for (Iterator<Client> i = ClientList.iterator(); i.hasNext(); ) {
-            //String toSend = "Your hand is => ";
             String toSend = "/HAND ";
             Client cl = i.next();
             for (Iterator<Card> j = cl.GetCardOnHand().iterator(); j.hasNext(); ) {

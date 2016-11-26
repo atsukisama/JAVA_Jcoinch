@@ -30,7 +30,7 @@ public class TelnetServerHandler extends SimpleChannelInboundHandler<String> {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         // Send greeting for a new connection.
-        ctx.write("Welcome to JCoiche game!\r\n");
+        ctx.write("Welcome to JCoinche game!\r\n");
         ctx.flush();
         _roomManager.AddCLient(ctx);
     }

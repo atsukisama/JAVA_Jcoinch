@@ -276,8 +276,7 @@ public class ClientGui {
                                 break;
             case "/TABLE"   :   setTable(cmd);
                                 break;
-            case "/TURN"    :   //System.out.println(Arrays.toString(cardTable));
-                                display(cmd);
+            case "/TURN"    :   display(cmd);
                                 break;
             case "/RESTART" :   gameStart = false;
                                 for (Integer i = 0; i < 4; i++) {
