@@ -257,7 +257,7 @@ public class ClientGui {
                 cardTable[i] = null;
             }
         } else {
-            System.out.println("More than 4 card on the table!");
+            System.out.println(Arrays.toString(cmd));
         }
     }
 
@@ -278,6 +278,11 @@ public class ClientGui {
                                 break;
             case "/TURN"    :   //System.out.println(Arrays.toString(cardTable));
                                 display(cmd);
+                                break;
+            case "/RESTART" :   gameStart = false;
+                                for (Integer i = 0; i < 4; i++) {
+                                    playerAction[i] = null;
+                                }
                                 break;
             default         :   System.out.print(str + "\n");
                                 break;
