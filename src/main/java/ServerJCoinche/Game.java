@@ -101,7 +101,12 @@ public class Game {
             else
                 Team2Score += score;
             room.SendHandCard();
-            //room.SendMsgToAll("Its turn of player => " + turn);
+            String str = "/TABLE ";
+            for (Map.Entry<Card, Integer> entree : CardOnTable.entrySet()) {
+                str += entree.getKey().GetCard();
+                str += " ";
+            }
+            room.SendMsgToAll(str);
             room.SendMsgToAll("/TURN " + turn);
             CardOnTable.clear();
             if (room.GetClientList().get(turn).GetCardOnHand().size() == 0) {
@@ -121,14 +126,12 @@ public class Game {
                     room.ReRound();
             }
         } else {
-            //String str = "Card on table => ";
             String str = "/TABLE ";
             for (Map.Entry<Card, Integer> entree : CardOnTable.entrySet()) {
                 str += entree.getKey().GetCard();
                 str += " ";
             }
             room.SendMsgToAll(str);
-            //room.SendMsgToAll("Its turn of player => " + turn);
             room.SendHandCard();
             room.SendMsgToAll("/TURN " + turn);
         }
