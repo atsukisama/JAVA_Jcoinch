@@ -15,7 +15,7 @@ public class ClientGui {
     Integer         clientId = -1;
     String          teamId = "";
     Integer         valueTurn = 0;
-    String          valueBet[] = new String[2];
+    String          valueBet[] = new String[3];
     String          playerAction[] = new String[4];
     String          cardHand[] = new String[9];
     String          cardTable[] = new String[6];
@@ -24,6 +24,20 @@ public class ClientGui {
 
     public ClientGui() {
 
+    }
+    private String suitSymbol(String card) {
+        String suit = null;
+        switch (card) {
+            case "D"    :   suit = "♦";
+                            break;
+            case "S"    :   suit = "♠";
+                            break;
+            case "H"    :   suit = "♥";
+                            break;
+            case "C"    :   suit = "♣";
+                            break;
+        }
+        return suit;
     }
     private String[] createCardGui(String card) {
         String cardGui[] = new String[5];
@@ -149,14 +163,31 @@ public class ClientGui {
         table[9] += "     └─────────────────────┘     ";
         return table;
     }
+
+    private String[] infoAtout() {
+        String box[] = new String[2];
+        box[0] = valueBet[2] + " : " + valueBet[0] + suitSymbol(valueBet[1]) + "|";
+        box[1] = Strings.repeat("-", (box[0].length() - 1)) + "+";
+        return box;
+    }
+
     private void display(String cmd[]) {
         System.out.print("\u001b[2J\u001b[H");
         System.out.flush();
-
+        System.out.println(Arrays.toString(cardTable));
         System.out.println("+" + Strings.repeat("-", 56) + "+");
         String table[] = displayTable();
+        Integer z = 0;
         for (Integer i = 0; i < table.length; i++) {
-            System.out.println("|" + String.format("%11s", " ") + table[i] + Strings.repeat(" ", 12) + "|");
+            if (!gameStart) {
+                System.out.println("|" + String.format("%11s", " ") + table[i] + Strings.repeat(" ", 12) + "|");
+            } else if (gameStart && z < 2) {
+                String infoBoxAtout[] = infoAtout();
+                System.out.println("|" + infoBoxAtout[z] + Strings.repeat(" ", 11 - infoBoxAtout[z].length()) + table[i] + Strings.repeat(" ", 12) + "|");
+                z++;
+            } else {
+                System.out.println("|" + String.format("%11s", " ") + table[i] + Strings.repeat(" ", 12) + "|");
+            }
         }
 
         String hand[] = createCardTrail(cardHand);
@@ -199,6 +230,7 @@ public class ClientGui {
         (!(valueBet[0].equals(cmd[2])) || !(valueBet[1].equals(cmd[3])))) {
             valueBet[0] = cmd[2];
             valueBet[1] = cmd[3];
+            valueBet[2] = "P" + Integer.toString(valueTurn);
             playerAction[valueTurn] = cmd[2] + " " + cmd[3];
             if (playerAction[valueTurn].length() < 5) {
                 playerAction[valueTurn] += " ";
@@ -224,6 +256,8 @@ public class ClientGui {
                 cardTable[i - 1] = cmd[i];
                 cardTable[i] = null;
             }
+        } else {
+            System.out.println("More than 4 card on the table!");
         }
     }
 
@@ -242,7 +276,8 @@ public class ClientGui {
                                 break;
             case "/TABLE"   :   setTable(cmd);
                                 break;
-            case "/TURN"    :   display(cmd);
+            case "/TURN"    :   //System.out.println(Arrays.toString(cardTable));
+                                display(cmd);
                                 break;
             default         :   System.out.print(str + "\n");
                                 break;
