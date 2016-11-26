@@ -23,6 +23,8 @@ public class ClientJCoinche {
 
     public static int PORT;
     public static String HOST;
+
+    
     public static void main(String[] args) throws Exception {
         // Configure SSL.
 
