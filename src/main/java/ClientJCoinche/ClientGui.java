@@ -3,6 +3,7 @@ package ClientJCoinche;
 
 import Commun.TransfertClass;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import com.google.common.base.Strings;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
@@ -15,6 +16,8 @@ public class ClientGui {
     Integer         clientId = -1;
     String          teamId = "";
     Integer         valueTurn = 0;
+    String          scoreTeam = "0";
+    String          error = "";
     String          valueBet[] = new String[3];
     String          playerAction[] = new String[4];
     String          cardHand[] = new String[9];
@@ -25,6 +28,17 @@ public class ClientGui {
     public ClientGui() {
 
     }
+
+    private String[] messageToBox(String message) {
+        String box[] = new String[3];
+
+        box[0] = "┌" + Strings.repeat("─", message.length()) + "┐";
+        box[1] = "│" + message + "│";
+        box[2] = "└" + Strings.repeat("─", message.length()) + "┘";
+
+        return box;
+    }
+
     private String suitSymbol(String card) {
         String suit = null;
         switch (card) {
@@ -171,9 +185,29 @@ public class ClientGui {
         return box;
     }
 
+    private void displayTop() {
+        String info[] = messageToBox(" Player " + clientId + " | Team " + teamId + " ");
+        String logo[] = messageToBox(" JCOINCHE ");
+        String score[] = messageToBox(" Score : " + scoreTeam + " ");
+        Integer left = ((58 - logo[0].length()) / 2) - info[0].length() - 1;
+        if (left < 0) {
+            left = 0;
+        }
+        Integer right = 58 - (logo[0].length() + info[0].length() + left);
+        right -= score[0].length();
+        if (right < 0) {
+            right = 0;
+        }
+
+        for (Integer i = 0; i < info.length; i++) {
+            System.out.println(info[i] + Strings.repeat(" ", left) + logo[i] + Strings.repeat(" ", right) + score[i]);
+        }
+    }
+
     private void display(String cmd[]) {
         System.out.print("\u001b[2J\u001b[H");
         System.out.flush();
+        displayTop();
         System.out.println("+" + Strings.repeat("-", 56) + "+");
         String table[] = displayTable();
         Integer z = 0;
@@ -206,18 +240,44 @@ public class ClientGui {
         }
 
         System.out.println("+" + Strings.repeat("-", 56) + "+");
+    }
 
-        valueTurn = Integer.parseInt(cmd[1]);
-
+    private void displayPrompt() {
         if (valueTurn == clientId) {
            if (gameStart == false) {
-               System.out.print("Place your bet => ");
+               System.out.print(error + "[Place your bet]> ");
            } else {
-               System.out.print("Place your card => ");
+               System.out.print(error + "[Place your card]> ");
            }
         } else {
-            System.out.print("Waiting for player " + Integer.toString(valueTurn) + "...");
+            String message = "[Waiting for Player " + Integer.toString(valueTurn) + "...]";
+            Integer padding = (58 - message.length()) / 2;
+            System.out.print(Strings.repeat(" ", padding) + message + Strings.repeat(" ", padding));
         }
+    }
+
+    private void displayWin(String cmd[]) {
+        System.out.print("\u001b[2J\u001b[H");
+        System.out.flush();
+        displayTop();
+        String teamWin[] = messageToBox(" TEAM " + cmd[1] + " WIN ");
+        String nextRound[] = messageToBox(" THANKS FOR PLAYING ");
+        System.out.println("+" + Strings.repeat("-", 56) + "+");
+        for (Integer i = 0; i < 6; i++) {
+            System.out.println("|" + Strings.repeat(" ", 56) + "|");
+        }
+        Integer padding = (56 - teamWin[0].length()) / 2;
+        for (Integer i = 0; i < teamWin.length; i++) {
+            System.out.println("|" + Strings.repeat(" ", padding) + teamWin[i] + Strings.repeat(" ", padding) + "|");
+        }
+        padding = (56 - nextRound[0].length()) / 2;
+        for (Integer i = 0; i < nextRound.length; i++) {
+            System.out.println("|" + Strings.repeat(" ", padding) + nextRound[i] + Strings.repeat(" ", padding) + "|");
+        }
+        for (Integer i = 0; i < 6; i++) {
+            System.out.println("|" + Strings.repeat(" ", 56) + "|");
+        }
+        System.out.println("+" + Strings.repeat("-", 56) + "+");
     }
 
     private void setBet(String cmd[]) {
@@ -260,6 +320,25 @@ public class ClientGui {
         }
     }
 
+    private void setScore(String cmd[]) {
+        if (cmd[1].equals(teamId)) {
+            scoreTeam = cmd[2];
+        }
+    }
+
+    private void setError(String cmd[]) {
+        String message = "";
+        switch (cmd[1]) {
+            case "2"    :   message = "[Wrong bet]";   
+                            break;
+            case "3"    :   message = "[Card not in hand]";
+                            break;
+            case "4"    :   message = "[Can't play that]";
+                            break;
+        }
+        error = "\033[1;31m" + message + "\033[0m";
+    }
+
     public void ParseMsg( String str) {
         String cmd[] = str.split(" ");
         switch (cmd[0]) {
@@ -276,8 +355,19 @@ public class ClientGui {
             case "/TABLE"   :   setTable(cmd);
                                 break;
             case "/TURN"    :   display(cmd);
+                                valueTurn = Integer.parseInt(cmd[1]);
+                                displayPrompt();
                                 break;
             case "/QUIT"    :   ClientJCoinche.closeClient();
+                                break;
+            case "/SCORE"   :   setScore(cmd);
+                                break;
+            case "/WIN"     :   displayWin(cmd);
+                                break;
+            case "/ERROR"   :   setError(cmd);
+                                display(cmd);
+                                displayPrompt();
+                                error = "";
                                 break;
             case "/RESTART" :   gameStart = false;
                                 for (Integer i = 0; i < 4; i++) {

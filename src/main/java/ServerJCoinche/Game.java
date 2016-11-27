@@ -11,7 +11,8 @@ public class Game {
     Room room;
     String firstCard = "";
     int ctp = 0;
-    Map<Card, Integer> CardOnTable = new HashMap<Card, Integer>();
+    //Map<Card, Integer> CardOnTable = new HashMap<Card, Integer>();
+    Map<Card, Integer> CardOnTable = new LinkedHashMap<Card, Integer>();
     int Team1Score = 0;
     int Team2Score = 0;
 
@@ -109,19 +110,26 @@ public class Game {
             if (room.GetClientList().get(turn).GetCardOnHand().size() == 0) {
                 if ((Team1Score > Team2Score && Team1Score > room.bet) || (Team1Score < Team2Score && Team2Score < room.bet)) {
                     room.SetTeam1Score(room.GetTeam1Score() + Team1Score + room.GetBet());
-                    room.SendMsgToAll("Team1 win this round !!");
+                    //room.SendMsgToAll("Team1 win this round !!");
+                    room.SendMsgToAll("/SCORE 1 " + room.GetTeam1Score());
                 }
                  else {
                     room.SetTeam2Score(room.GetTeam2Score() + Team2Score + room.GetBet());
-                    room.SendMsgToAll("Team2 win this round !!");
+                    //room.SendMsgToAll("Team2 win this round !!");
+                    room.SendMsgToAll("/SCORE 2 " + room.GetTeam2Score());
                 }
                 room.SendMsgToAll("Team1 => " + room.GetTeam1Score() + " Team2 => " + room.GetTeam2Score());
                 room.SendMsgToAll("/RESTART");
                 room.SeIsOnPlay(false);
-                if (room.GetTeam1Score() > 100 || room.GetTeam2Score() > 100)
+                if (room.GetTeam1Score() > 1000 || room.GetTeam2Score() > 1000) {
+                    if (room.GetTeam1Score() > room.GetTeam2Score())
+                        room.SendMsgToAll("/WIN 1");
+                    else
+                        room.SendMsgToAll("/WIN 2");
                     room.SendMsgToAll("/QUIT");
-                else
+                } else {
                     room.ReRound();
+                }
             }
         } else {
             String str = "/TABLE ";
