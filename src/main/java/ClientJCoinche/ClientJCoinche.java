@@ -35,9 +35,6 @@ public class ClientJCoinche {
     public static void main(String[] args) throws Exception {
         // Configure SSL.
 
-        int player_id = -1;
-        int room_id = -1;
-
         if (args.length == 2) {
             HOST = args[0];
             PORT = Integer.parseInt(args[1]);
@@ -52,7 +49,6 @@ public class ClientJCoinche {
         } else {
             sslCtx = null;
         }
-
         group = new NioEventLoopGroup();
         try {
             Bootstrap b = new Bootstrap();
@@ -62,7 +58,6 @@ public class ClientJCoinche {
 
             // Start the connection attempt.
             ch = b.connect(HOST, PORT).sync().channel();
-
             // Read commands from the stdin.
             ChannelFuture lastWriteFuture = null;
             BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -86,6 +81,8 @@ public class ClientJCoinche {
             if (lastWriteFuture != null) {
                 lastWriteFuture.sync();
             }
+        } catch (Exception e) {
+            ClientJCoinche.closeClient();
         } finally {
             group.shutdownGracefully();
         }
