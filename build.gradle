@@ -37,6 +37,10 @@ task 'client' (type: Jar) {
     with jar
 }
 
+task 'cover' {
+    println 'Not implemented'
+}
+
 // end::jar[]
 
 // tag::dependencies[]
@@ -46,7 +50,7 @@ targetCompatibility = 1.8
 dependencies {
     compile "com.google.guava:guava:20.0"
     compile "io.netty:netty-all:4.1.6.Final"
-    //testCompile "junit:junit:4.12"
+    testCompile "junit:junit:4.12"
 }
 // end::dependencies[]
 

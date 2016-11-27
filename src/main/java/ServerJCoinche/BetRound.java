@@ -111,7 +111,6 @@ public class BetRound {
             for (int j = 0; j < 3; j++) {
                 if (!room.GetClientList().get(i).GetPass()) {
                     turn = i;
-                    //room.SendMsgToAll("Its turn of player => " + turn);
                     room.SendMsgToAll("/TURN " + turn);
                     return;
                 }
@@ -119,16 +118,12 @@ public class BetRound {
                 i = i % 4;
             }
         }
-        //room.SendMsgToAll("Final bet => " + bet + " trump => " + atout);
         room.SendMsgToAll("/BET FINAL " + bet + " " + atout);
-        //room.SendMsgToAll("Now its time for the Game");
-        //room.SendMsgToAll("Its turn of player => 0");
         room.SendHandCard();
         room.SendMsgToAll("/TURN 0");
         room.SetBetRound(false);
         room.SetAtout(atout);
         room.SeBet(bet);
         room.SeIsOnPlay(true);
-//        ClearBetRoundClass();
     }
 }

@@ -370,6 +370,7 @@ public class ClientGui {
                                 error = "";
                                 break;
             case "/RESTART" :   gameStart = false;
+                                valueTurn = 0;
                                 for (Integer i = 0; i < 4; i++) {
                                     playerAction[i] = null;
                                 }
